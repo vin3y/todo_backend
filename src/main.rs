@@ -1,4 +1,5 @@
 mod db;
+mod model;
 
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
