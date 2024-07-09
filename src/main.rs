@@ -1,14 +1,36 @@
+mod controllers;
 mod db;
 mod model;
 
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-use dotenv::dotenv;
+use model::todomodel::Todo;
+use mongodb::Collection;
 
+use crate::controllers::list_todo::get_all_todos;
 use db::{create_db_client, AppState};
 
 #[get("/")]
 async fn home_function() -> impl Responder {
     HttpResponse::Ok().json("Hello World")
+}
+
+#[get("/list-all")]
+async fn list_function(data: web::Data<AppState>) -> impl Responder {
+    let collection = data.db.collection::<Todo>("todos");
+    match get_all_todos(&collection).await {
+        Ok(todos) => HttpResponse::Ok().json(serde_json::json!(
+            {
+            "status" : "success",
+            "statusCode" : 200,
+            "data" :todos
+            }
+        )),
+        Err(e) => HttpResponse::InternalServerError().json(serde_json::json!({
+            "status" : "failed",
+            "statusCode" : 401,
+            "message" : format!("An error occured: {}", e)
+        })),
+    }
 }
 
 async fn not_found_route_code() -> impl Responder {
@@ -28,6 +50,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(state.clone())
             .service(home_function)
+            .service(list_function)
             .default_service(web::route().to(not_found_route_code))
     })
     .bind("localhost:8080")?
