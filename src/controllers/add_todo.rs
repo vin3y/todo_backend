@@ -1,8 +1,7 @@
 use crate::{db::AppState, model::todomodel::Todo};
 use actix_web::{post, web, HttpResponse, Responder};
-use mongodb::Collection;
 use serde::Deserialize;
-use serde_json::{json, Deserializer, Serializer};
+
 
 #[derive(Debug, Deserialize)]
 struct CreateTodo {
