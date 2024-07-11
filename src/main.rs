@@ -6,6 +6,7 @@ use crate::controllers::add_todo::add_todo;
 use crate::controllers::list_todo::get_all_todos;
 use crate::controllers::delete_todo::delete_todo;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use controllers::edit_todo::edit_todo_controller;
 use db::{create_db_client, AppState};
 use model::todomodel::Todo;
 
@@ -53,6 +54,7 @@ async fn main() -> std::io::Result<()> {
             .service(list_function)
             .service(add_todo)
             .route("/delete-todo", web::delete().to(delete_todo))
+            .route("/update-todo", web::patch().to(edit_todo_controller))
             .default_service(web::route().to(not_found_route_code))
     })
     .bind("localhost:8080")?
