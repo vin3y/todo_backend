@@ -1,10 +1,7 @@
+use actix_web::{post, web};
 use futures::stream::TryStreamExt;
-use mongodb::{
-    bson::{doc, oid::ObjectId, Document},
-    options::FindOptions,
-    Collection,
-};
-use serde::{Deserialize, Serialize};
+use mongodb::{bson::doc, Collection};
+
 
 use crate::model::todomodel::Todo;
 

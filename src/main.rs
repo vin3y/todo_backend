@@ -2,12 +2,11 @@ mod controllers;
 mod db;
 mod model;
 
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
-use model::todomodel::Todo;
-use mongodb::Collection;
-
+use crate::controllers::add_todo::add_todo;
 use crate::controllers::list_todo::get_all_todos;
+use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use db::{create_db_client, AppState};
+use model::todomodel::Todo;
 
 #[get("/")]
 async fn home_function() -> impl Responder {
@@ -51,6 +50,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(state.clone())
             .service(home_function)
             .service(list_function)
+            .service(add_todo)
             .default_service(web::route().to(not_found_route_code))
     })
     .bind("localhost:8080")?

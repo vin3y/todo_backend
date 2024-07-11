@@ -1,7 +1,6 @@
-use std::env;
-
 use dotenv::dotenv;
 use mongodb::{bson::doc, options::ClientOptions, Client, Database};
+use std::env;
 
 pub struct AppState {
     pub db: Database,
