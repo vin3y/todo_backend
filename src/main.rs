@@ -6,7 +6,8 @@ use crate::controllers::add_todo::add_todo;
 use crate::controllers::delete_todo::delete_todo;
 use crate::controllers::list_todo::get_all_todos;
 use crate::controllers::todo_done::update_done;
-use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use actix_cors::Cors;
+use actix_web::{get, http, web, App, HttpResponse, HttpServer, Responder};
 use controllers::edit_todo::edit_todo_controller;
 use db::{create_db_client, AppState};
 use model::todomodel::Todo;
@@ -48,8 +49,16 @@ async fn not_found_route_code() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let state = web::Data::new(create_db_client().await);
+
     HttpServer::new(move || {
+        let cors: Cors = Cors::default()
+            .allowed_origin("http://localhost:3000")
+            .allowed_methods(vec!["GET", "POST", "PATCH", "DELETE"])
+            .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            .allowed_header(http::header::CONTENT_TYPE)
+            .max_age(3600);
         App::new()
+            .wrap(cors)
             .app_data(state.clone())
             .service(home_function)
             .service(list_function)

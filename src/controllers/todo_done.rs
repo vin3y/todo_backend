@@ -5,7 +5,7 @@ use actix_web::{
     HttpResponse, Responder,
 };
 use mongodb::{
-    bson::{doc, oid::ObjectId, Document},
+    bson::{doc, oid::ObjectId},
     Collection,
 };
 use serde::Deserialize;
