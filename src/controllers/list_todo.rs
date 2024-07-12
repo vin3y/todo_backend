@@ -1,7 +1,6 @@
 use futures::stream::TryStreamExt;
 use mongodb::{bson::doc, Collection};
 
-
 use crate::model::todomodel::Todo;
 
 pub async fn get_all_todos(
